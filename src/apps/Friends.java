@@ -20,7 +20,7 @@ public class Friends{
 		System.out.println(a);
 		
 		// check check sss 
-		
+		// check farris's check
 	}
 	
 }
