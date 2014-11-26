@@ -19,6 +19,8 @@ public class Friends{
 		int a = sc.nextInt();
 		System.out.println(a);
 		
+		// check check sss 
+		
 	}
 	
 }
