@@ -21,6 +21,7 @@ public class Friends{
 		
 		// check check sss 
 		// check farris's check
+		// Everything should be working at this point. 
 	}
 	
 }
