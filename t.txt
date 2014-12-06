@@ -1,5 +1,5 @@
 15
-sam|y|rutgers
+sam|y|RUtgers
 jane|y|rutgers
 michele|y|cornell
 sergei|y|rutgers
@@ -14,7 +14,7 @@ heather|y|penn state
 rachel|n
 rich|y|ucla
 tom|y|ucla
-sam|jane
+sam|Jane
 jane|bob
 jane|kaitlin
 kaitlin|nick
