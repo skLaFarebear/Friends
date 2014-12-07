@@ -1,3 +1,10 @@
-15
+6
 sam|y|rutgers
 jane|y|rutgers
+matt|y|rutgers
+Bob|n
+Kaitlin|n
+Nick|n
+Kaitlin|Jane
+Matt|Kaitlin
+Kaitlin|Nick

@@ -7,6 +7,8 @@ import java.lang.*;
 
 public class Friends{
 	
+	
+	
 	public static void main(String[] args){
 		
 		// Creates a new scanner for user input
@@ -104,14 +106,26 @@ public class Friends{
 					
 				} while (stuCount < totFriendSize);
 				
-				// For relationships between people
+				
+				
+				/* ****************************************************** 
+				 * Gets the relationships and puts them in graph
+				 ********************************************************/ 
 				String relationLine = wholeFile.readLine();
 				int oneIdx = 0;
 				int twoIdx = 0;
 				
 				while(relationLine != null) {
 					
-					StringTokenizer lineParsed = new StringTokenizer(relationLine, "|"); 
+					StringTokenizer lineParsed = new StringTokenizer(relationLine, "|");
+					
+					int tokenAmount = lineParsed.countTokens();
+					
+					// Checks for skipped spaces. 
+					if (tokenAmount < 2 || tokenAmount > 2) {
+						System.out.print("Problem with relationships list: C2");
+						return;
+					}
 					
 					// Parsed values from line 
 					String relationOne = lineParsed.nextToken().toLowerCase();
@@ -119,14 +133,15 @@ public class Friends{
 					
 					// Checking if # of people overlaps with relationships 
 					if(relationTwo.equals("y") || relationTwo.equals("n")) {
-						System.out.println(": Adjust the number of students at start of file!: C2: ");
+						System.out.println(": Adjust the number of students at start of file!: C2.1: ");
 						return;
 					} 
 					
+					// Goes through each person in the people list, sets first relation's index 
 					for (int oneCnt = 0; oneCnt <= totFriendSize; oneCnt++) {
 						
 						// Checking if person exists 
-						if(oneCnt == totFriendSize) {System.out.println(relationOne + " does not exist! C2.1"); return;}
+						if(oneCnt == totFriendSize) {System.out.println(relationOne + " does not exist! C2.2"); return;}
 						
 						if(relationOne.equals(deGraph[oneCnt].name)) {
 							oneIdx = oneCnt;
@@ -134,80 +149,109 @@ public class Friends{
 						} 
 					}
 					
+					// Goes through each person in the people list, sets second relation relation's index 
 					for (int twoCnt = 0; twoCnt <= totFriendSize; twoCnt++) {
 						
 						// Checking if person two exists 
-						if(twoCnt == totFriendSize) {System.out.println(relationOne + " does not exist! C2.2"); return;}
+						if(twoCnt == totFriendSize) {System.out.println(relationTwo + " does not exist! C2.3"); return;}
 						
 						if(relationTwo.equals(deGraph[twoCnt].name)) {
 							
 							twoIdx = twoCnt;
-							
 							break;
 						} 
 					}
 					
-					/*// Sets head of graph
+					// Make new neighbor nodes 
+					Neighbor newNeighbor = new Neighbor(twoIdx, null);
+					Neighbor undirNeighbor = new Neighbor(oneIdx, null);
 					
-					if(deGraph[oneIdx].adjList == null || deGraph[twoIdx].adjList == null) {
-						deGraph[oneIdx].adjList = new Neighbor(twoIdx, null);
-						deGraph[twoIdx].adjList = new Neighbor(oneIdx, null);
-						System.out.print("set");
-						continue;
-					}
-
-					
-					for (Neighbor pntOne = deGraph[oneIdx].adjList; pntOne == null; pntOne = pntOne.next) {
-						
-						if(pntOne.next == null) {
-							pntOne.next.next = new Neighbor(twoIdx, null);
-							System.out.print("add to end?");
+					// Adds the newly made list as head if the first relation is null
+					if(deGraph[oneIdx].adjList == null) {
+						/* ****************************************************** 
+						 * If head of the vertex is null, then second relationship is either null and needs making
+						 * or it already exists and needs to be added too
+						 ********************************************************/ 
+						if(deGraph[twoIdx].adjList == null) {
+							System.out.println("C2.5");
+							deGraph[twoIdx].adjList = undirNeighbor;
+						} else {
+							
+							for (Neighbor pntOne = deGraph[twoIdx].adjList; pntOne != null; pntOne = pntOne.next) {
+								
+								if(pntOne.next == null) {
+									pntOne.next = undirNeighbor;
+									System.out.println("C2.9009");
+									break;
+								}
+							}
+							
 						}
+						
+						System.out.println("C2.55");
+						deGraph[oneIdx].adjList = newNeighbor;
+						
+					} else {
+						
+						// Adds the new neighbor to the end of the list 
+						//deGraph[oneIdx].adjList.next = newNeighbor;
+						System.out.println("C2.555");
+						
+						// Checks if a connection needs to be made if second relation is added to end of first relation
+						if(deGraph[twoIdx].adjList == null) {
+							System.out.println("C2.77");
+							deGraph[twoIdx].adjList = undirNeighbor;
+						}
+						
+						for (Neighbor pntOne = deGraph[oneIdx].adjList; pntOne != null; pntOne = pntOne.next) {
+							
+							if(pntOne.next == null) {
+								pntOne.next = newNeighbor;
+								System.out.println("C2.99");
+								break;
+							}
+						}
+						
+						//deGraph[oneIdx].adjList.next = newNeighbor;
 					}
+					
+					
+					//System.out.println(deGraph[oneIdx].idxNum + " --> " + deGraph[oneIdx].adjList.vertexNum + "fuck");
+					//System.out.println(deGraph[twoIdx].idxNum + " --> " + deGraph[twoIdx].adjList.vertexNum + "fuck2");
+					
+					
+					System.out.print(deGraph[oneIdx].name + " --> ");
+					for(Neighbor pntr = deGraph[oneIdx].adjList; pntr != null; pntr = pntr.next) {
+						System.out.print(deGraph[pntr.vertexNum].name + "--> ");
+						//System.out.println();
+						//System.out.print("C2.4");
+					}
+					
+					
+					System.out.println();
 
 					
 					System.out.println(oneIdx + " " + twoIdx);
-					System.out.println(relationOne + " " + relationTwo);*/
+					System.out.println(relationOne + " " + relationTwo);
 					
-				
+					//break;
 					relationLine = wholeFile.readLine();
 					
-				} 
+				}
+				// end of while 
+				// ending of try
 				
-				//System.out.println(oneIdx + " " + twoIdx);
+				/* ****************************************************** 
+				 * USE THIS SECTION TO TEST YOUR CODE
+				 ********************************************************/ 
 				
-				//System.out.print(Neighbor.in);
-				
-				/*// Goes through every line of file
-				while(linedude != null) {
-					
-					StringTokenizer Friender = new StringTokenizer(linedude, "|");
-					
-					FriendNode newNode = new FriendNode(Friender.nextToken());  // name of each person in line
-					
-					String nextToken = Friender.nextToken();
-					
-					if(nextToken.equals("y")) {   // if they're in school or not
-						
-						newNode.school = Friender.nextToken();
-						System.out.println(newNode.toString());
-						
-					} else if(nextToken.equals("n")){
-						
-						System.out.println(newNode);
-						
-					} else {
-						//System.out.print("hi");
-						break;
-					}
-					
-					linedude = wholeFile.readLine();
-					++stuCount;
+				System.out.print(deGraph[Friends.nameintConv("nick", deGraph)].name + " --> ");
+				for(Neighbor pntr = deGraph[Friends.nameintConv("nick", deGraph)].adjList; pntr != null; pntr = pntr.next) {
+					System.out.print(deGraph[pntr.vertexNum].name + "--> ");
+					//System.out.println();
+					//System.out.print("C2.4");
 				}
 				
-				while(linedude!=null){
-					
-				}*/
 				
 			} catch(NumberFormatException e) {
 				
@@ -231,51 +275,11 @@ public class Friends{
 		}
 		
 		
-		/*try {
-		//System.out.print(sc.next());
-		Scanner line = new Scanner(new File(sc.next()));
-		
-		friendSize = Integer.parseInt(line.next()); 
-		
-		System.out.println(friendSize);
-		//System.out.print(line.hasNext());
-		
-		//System.out.println(line.next());
-		
-		
-		while(line.hasNext()) {
-			StringTokenizer Friender = new StringTokenizer(line.next(), "|");
-			FriendNode newNode = new FriendNode(Friender.nextToken());  //name of each person in line
-			if(Friender.nextToken().equals("y")) {   //if they're in school or not
-				newNode.school = Friender.nextToken();
-				System.out.println(newNode.toString());
-			}else if(Friender.nextToken().equals("n")){
-				System.out.println(newNode.toString());
-				continue;
-			}
-		}
-		
-		
-		} catch(FileNotFoundException e) {
-			System.out.println(e + ": Catch Wrong Name");
-			System.out.println("shit");
-			return;
-			
-		}*/
-		
-		
-	
-		
-		//System.out.print();
-		
-		// Build graph
-		
-		
-		/*System.out.println("Enter 1 to find the students at the school");
+		System.out.println("Enter 1 to find the students at the school");
 		System.out.println("Enter 2 to find the shortest chain from a person");
 		System.out.println("Enter 3 to find the cliques at each school");
 		System.out.println("Enter 4 to find the connectors");
-		System.out.println("Enter 5 to quit");*/
+		System.out.println("Enter 5 to quit");
 		
 		
 		
@@ -289,28 +293,40 @@ public class Friends{
 		
 		//int numChose = sc.nextInt();
 		
-		
-		
-		
-		
-		//System.out.println(a);
-		
-		// check check sss 
-		// check farris's check
-		// Everything should be working at this point.
-		
+		/*System.out.println(nameintConv("sam", deGraph));
+		System.out.println(Friends.nameintConv("jane", deGraph));
+		System.out.println(Friends.nameintConv("nick", deGraph));*/
+		//Friends.
 		
 	}
+	
+	
+	// This method does name conversion to index. 
+	public static int nameintConv(String name, FriendNode daShit[]) {
+		
+		for(int x = 0; x < daShit.length; x++) {
+			if(daShit[x].name.equals(name)) {
+				return  daShit[x].idxNum;
+			}
+		}
+		
+		return -1;
+	}
+	
+	
+	
+	//Start code here
 	
 }
 
 class FriendNode{
 	
+	
 	String name;
 	String school;
 	int idxNum;
 	
-	Neighbor adjList;
+	Neighbor adjList; // head of the neighbor 
 	
 	public FriendNode(String name, int idxNum){
 		this.name = name;
