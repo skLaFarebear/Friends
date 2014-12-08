@@ -66,6 +66,7 @@ public class Friends{
 					// Distributed values for parsed line
 					String person = lineParsed.nextToken().toLowerCase(); // person  
 					String schoolBool = lineParsed.nextToken().toLowerCase(); // yes or no
+
 					
 					// Setting up new nodes
 					FriendNode newNode = new FriendNode(person, stuCount); 
@@ -274,21 +275,61 @@ public class Friends{
 			
 		}
 		
-		
-		System.out.println("Enter 1 to find the students at the school");
-		System.out.println("Enter 2 to find the shortest chain from a person");
-		System.out.println("Enter 3 to find the cliques at each school");
-		System.out.println("Enter 4 to find the connectors");
-		System.out.println("Enter 5 to quit");
+		//Scanner userInput2 = new Scanner(System.in);
 		
 		
+		
+		System.out.println("Enter 1 to find the shortest chain from a person");
+		System.out.println("Enter 2 to find the cliques at each school");
+		System.out.println("Enter 3 to find the connectors");
+		System.out.println("Enter 4 to quit");
+		
+		
+		System.out.print("Enter choice: ");
+		
+		String decision = userInput.next();
+		
+		while(!decision.equals("4")) {
+			
+			switch(Integer.parseInt(decision)) {
+				case 1:
+					System.out.println("Enter person where you want to start search");
+					String name1 = userInput.next().toLowerCase();
+					System.out.println("Enter the person you want to find in the friend chain");
+					String name2 = userInput.next().toLowerCase();
+					shortPath(name1, name2, totFriendSize, deGraph);
+				case 2:
+					System.out.println("Enter the school that you want the cliques for");
+					String school = userInput.next();
+					// Fix this...
+					if(userInput.hasNext()) {
+						school = school.concat(" " + userInput.next());
+					}
+					System.out.print(school);
+					cliques(school.toLowerCase(), deGraph);
+				case 3:
+			}
+			
+			System.out.println("Enter 1 to find the shortest chain from a person");
+			System.out.println("Enter 2 to find the cliques at each school");
+			System.out.println("Enter 3 to find the connectors");
+			System.out.println("Enter 4 to quit");
+			
+			
+			System.out.print("Enter choice: ");
+			
+			decision = userInput.next();
+			
+		}
 		
 		
 		// User chooses a number 
-		System.out.print("Enter choice: ");
+		//System.out.print("Enter choice: ");
 		
 		
+		//String cool = userInput.next();
 		
+		//System.out.print(cool);
 		
 		
 		//int numChose = sc.nextInt();
@@ -314,8 +355,216 @@ public class Friends{
 	}
 	
 	
+	public static void shortPath(String relation1, String relation2, int totFriendSize, FriendNode deGraph[]) {
+		ArrayList<String> list = new ArrayList<String>();
+		String nameChecked[] = new String[totFriendSize];
+		nameChecked[0] = relation1;
+		
+		int counter = 0; // keeps track of the amount of people already searched
+		int nameCheckCount = 1;
+		list = DFS(relation1, nameChecked, relation2, list, deGraph, totFriendSize, counter, nameCheckCount);
+		for(int i=0;i<list.size();i++){
+			System.out.println(list.get(i));
+		}
+	}
+	
+	private static ArrayList<String> DFS(String start, String[] nameChecked, String finish, ArrayList<String> list, FriendNode deGraph[], int totFriendSize, int counter, int nameCheckCount){
+		
+		
+		if(start.equals(finish)){
+			list.add(finish);
+			return list;
+		}
+		if(counter>=totFriendSize){
+			return list;
+		}
+		
+		
+		
+		FriendNode friendlist = deGraph[Friends.nameintConv(start, deGraph)];//goes to person vertex in array
+		start = deGraph[friendlist.adjList.vertexNum].name; //first person in the list
+		
+
+		for(int x = 0; x < nameChecked.length; x++) {
+			
+			
+			
+			if(start.equals(nameChecked[x])) {
+				
+				if(friendlist.adjList.next == null) {
+					return list; 
+				}
+				
+				
+				start = deGraph[friendlist.adjList.next.vertexNum].name;
+				
+			}
+		}
+		
+		
+		counter++;
+		
+		nameChecked[nameCheckCount] = start;
+		++nameCheckCount;
+		
+		list.add(start);
+		
+		System.out.println(start+"*");
+		
+		while(friendlist.adjList!=null){
+			DFS(start, nameChecked, finish, list, deGraph, totFriendSize, counter, nameCheckCount);
+			
+			for(int x = 0; x < nameChecked.length; x++) {
+				
+			}	
+			
+			friendlist.adjList=friendlist.adjList.next;
+		}	
+		
+		
+		return list;
+				
+	}
 	
 	//Start code here
+	
+
+
+public static void cliques(String school, FriendNode[] deGraph) {
+	
+	ArrayList<FriendNode> sameSkool = new ArrayList<FriendNode>();
+	
+	
+	for(int x = 0; x < deGraph.length; x++) {
+		
+		if(deGraph[x].school == null) {
+			continue;
+		}
+		
+		if(deGraph[x].school.equals(school)) {
+			sameSkool.add(deGraph[x]);
+			System.out.print(deGraph[x]);
+		}
+	}
+	
+	if(sameSkool.isEmpty()) {
+		System.out.print("Nobody goes to that school");
+		return;
+	}
+	
+	
+	/*System.out.print(deGraph[Friends.nameintConv("sam", deGraph)].name + " --> ");
+	for(Neighbor pntr = deGraph[Friends.nameintConv("sam", deGraph)].adjList; pntr != null; pntr = pntr.next) {
+		System.out.print(deGraph[pntr.vertexNum].name + "--> ");
+	}*/
+	
+	
+	//for()
+
+	ArrayList<FriendNode> clique = new ArrayList<FriendNode>();
+	clique.add(sameSkool.get(0));
+	sameSkool.set(0, new FriendNode(null, -1));
+	//sameSkool.remove(2);
+	
+	System.out.println();
+	
+	//Prints out schoolmates
+	for(int x = 0; x < sameSkool.size(); x++) {
+		System.out.print(sameSkool.get(x));
+	}
+	System.out.println();
+	
+	boolean isEmpty = false;
+	
+	
+	
+	while(isEmpty != true)	{
+	
+		// This loop double checks the list for cases like penn state and ming
+	for(int y = 0; y < sameSkool.size() + 1; y++) {
+	for(int i = 1; i<sameSkool.size();i++){
+		for(Neighbor pnter = sameSkool.get(i).adjList; pnter != null; pnter = pnter.next) {
+			//System.out.print(sameSkool.get(i));
+			//System.out.print(deGraph[pnter.vertexNum].name);
+			//System.out.println();
+			//System.out.print(clique.get(clique.size() - 1).idxNum);
+			
+			for(int x = 0; x < clique.size(); x++) {
+				
+				if(pnter.vertexNum == clique.get(x).idxNum) {
+					clique.add(sameSkool.get(i));
+					sameSkool.set(i, new FriendNode(null, -1));
+				}
+				
+			}
+				
+			
+		}
+		
+	}
+	}
+	
+
+	
+	// Prints size of clique 
+	System.out.println(clique.size());
+	
+	// Gets list of clique
+	for(int x = 0; x < clique.size(); x++) {
+		System.out.println(clique.get(x).name + "|y|" + clique.get(x).school);
+	}
+	
+	//Prints out schoolmates
+	for(int x = 0; x < sameSkool.size(); x++) {
+		System.out.print(sameSkool.get(x));
+	}
+	
+	for(int m = 0; m < sameSkool.size(); m++) {
+		
+		if(sameSkool.get(m).name != null) {
+			
+			//System.out.print(m + "hey");
+			//System.out.print(sameSkool.get(m) + "hey");
+			
+			clique.clear();
+			clique.add(sameSkool.get(m));
+			sameSkool.set(m, new FriendNode(null, -1));
+			
+			break; 
+		}
+		
+		
+		if(m == sameSkool.size()-1) {
+			isEmpty = true; 
+		}
+		
+	}
+		//System.out.println();
+		
+		/*for(int x = 0; x < sameSkool.size(); x++) {
+			System.out.print(sameSkool.get(x));
+		}*/
+	}
+	
+	
+	
+		
+	
+	
+	System.out.println();
+	
+	/*System.out.print(deGraph[Friends.nameintConv("jane", deGraph)].name + " --> ");
+	for(Neighbor pntr = deGraph[Friends.nameintConv("jane", deGraph)].adjList; pntr != null; pntr = pntr.next) {
+		System.out.print(deGraph[pntr.vertexNum].name + "--> ");
+	}*/
+	
+	/*for(int x = 0; x < clique.size(); x++) {
+		System.out.print(clique.get(x).name);
+	}*/
+	
+		
+	}
+	
 	
 }
 
