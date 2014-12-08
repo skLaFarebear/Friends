@@ -301,10 +301,12 @@ public class Friends{
 				case 2:
 					System.out.println("Enter the school that you want the cliques for");
 					String school = userInput.next();
+					
 					// Fix this...
-					if(userInput.hasNext()) {
-						school = school.concat(" " + userInput.next());
-					}
+					//System.out.print(userInput.hasNext());
+					/*if(userInput.hasNext()) {
+						school = school.concat(" " );
+					}*/
 					System.out.print(school);
 					cliques(school.toLowerCase(), deGraph);
 				case 3:
