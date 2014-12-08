@@ -285,7 +285,7 @@ public class Friends{
 		System.out.println("Enter 4 to quit");
 		
 		
-		System.out.print("Enter choice: ");
+		System.out.println("Enter choice: ");
 		
 		String decision = userInput.next();
 		
@@ -298,6 +298,9 @@ public class Friends{
 					System.out.println("Enter the person you want to find in the friend chain");
 					String name2 = userInput.next().toLowerCase();
 					shortPath(name1, name2, totFriendSize, deGraph);
+					System.out.println("Enter choice: ");
+					decision = userInput.next();
+					continue;
 				case 2:
 					System.out.println("Enter the school that you want the cliques for");
 					String school = userInput.next();
@@ -309,6 +312,9 @@ public class Friends{
 					}*/
 					System.out.print(school);
 					cliques(school.toLowerCase(), deGraph);
+					System.out.println("Enter choice: ");
+					decision = userInput.next();
+					continue;
 				case 3:
 			}
 			
@@ -366,14 +372,18 @@ public class Friends{
 		int nameCheckCount = 1;
 		list = DFS(relation1, nameChecked, relation2, list, deGraph, totFriendSize, counter, nameCheckCount);
 		for(int i=0;i<list.size();i++){
-			System.out.println(list.get(i));
+			System.out.print(list.get(i) + "-->");
 		}
+		System.out.println();
 	}
 	
 	private static ArrayList<String> DFS(String start, String[] nameChecked, String finish, ArrayList<String> list, FriendNode deGraph[], int totFriendSize, int counter, int nameCheckCount){
-		
-		
 		if(start.equals(finish)){
+			for(int i = 0;i<list.size();i++){
+				if(list.get(i).equals(start)){
+					return list;
+				}
+			}
 			list.add(finish);
 			return list;
 		}
@@ -381,9 +391,12 @@ public class Friends{
 			return list;
 		}
 		
-		
+		list.add(start);
 		
 		FriendNode friendlist = deGraph[Friends.nameintConv(start, deGraph)];//goes to person vertex in array
+		if(deGraph[friendlist.adjList.vertexNum].name == null){
+			return list;
+		}
 		start = deGraph[friendlist.adjList.vertexNum].name; //first person in the list
 		
 
@@ -409,18 +422,20 @@ public class Friends{
 		nameChecked[nameCheckCount] = start;
 		++nameCheckCount;
 		
-		list.add(start);
-		
-		System.out.println(start+"*");
+		//System.out.println(start+"*");
 		
 		while(friendlist.adjList!=null){
 			DFS(start, nameChecked, finish, list, deGraph, totFriendSize, counter, nameCheckCount);
 			
 			for(int x = 0; x < nameChecked.length; x++) {
-				
-			}	
+				if(nameChecked[x].equals(start)){
+					return list;
+				}
+			}
+			
 			
 			friendlist.adjList=friendlist.adjList.next;
+			
 		}	
 		
 		
