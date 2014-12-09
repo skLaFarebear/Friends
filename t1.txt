@@ -1,5 +1,8 @@
-15
+4
 sam|y|rutgers
 jane|y|rutgers
 michele|y|cornell
 sergei|y|rutge
+sam|Jane
+Jane|Michele
+Michele|Sergei

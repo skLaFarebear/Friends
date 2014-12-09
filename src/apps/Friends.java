@@ -13,6 +13,7 @@ public class Friends{
 		
 		// Creates a new scanner for user input
 		Scanner userInput = new Scanner(System.in);
+		userInput.useDelimiter("\\n");
 		
 		// # of students in a file
 		int totFriendSize; 
@@ -101,7 +102,7 @@ public class Friends{
 					
 					deGraph[stuCount] = newNode;
 					
-					System.out.println(deGraph[stuCount]);
+					//System.out.println(deGraph[stuCount]);
 					
 					++stuCount; // Increments student count
 					
@@ -174,7 +175,7 @@ public class Friends{
 						 * or it already exists and needs to be added too
 						 ********************************************************/ 
 						if(deGraph[twoIdx].adjList == null) {
-							System.out.println("C2.5");
+							//System.out.println("C2.5");
 							deGraph[twoIdx].adjList = undirNeighbor;
 						} else {
 							
@@ -182,33 +183,44 @@ public class Friends{
 								
 								if(pntOne.next == null) {
 									pntOne.next = undirNeighbor;
-									System.out.println("C2.9009");
+									//System.out.println("C2.9009");
 									break;
 								}
 							}
 							
 						}
 						
-						System.out.println("C2.55");
+						//System.out.println("C2.55");
 						deGraph[oneIdx].adjList = newNeighbor;
 						
 					} else {
 						
 						// Adds the new neighbor to the end of the list 
 						//deGraph[oneIdx].adjList.next = newNeighbor;
-						System.out.println("C2.555");
+						//System.out.println("C2.555");
 						
 						// Checks if a connection needs to be made if second relation is added to end of first relation
 						if(deGraph[twoIdx].adjList == null) {
-							System.out.println("C2.77");
+							//System.out.println("C2.77");
 							deGraph[twoIdx].adjList = undirNeighbor;
+						} else {
+							
+							for (Neighbor pntOne = deGraph[twoIdx].adjList; pntOne != null; pntOne = pntOne.next) {	
+								
+								if(pntOne.next == null) {
+									pntOne.next = undirNeighbor;
+									//System.out.println("C2.909");
+									break;
+								}
+							}
+							
 						}
 						
 						for (Neighbor pntOne = deGraph[oneIdx].adjList; pntOne != null; pntOne = pntOne.next) {
 							
 							if(pntOne.next == null) {
 								pntOne.next = newNeighbor;
-								System.out.println("C2.99");
+								//System.out.println("C2.99");
 								break;
 							}
 						}
@@ -221,19 +233,20 @@ public class Friends{
 					//System.out.println(deGraph[twoIdx].idxNum + " --> " + deGraph[twoIdx].adjList.vertexNum + "fuck2");
 					
 					
-					System.out.print(deGraph[oneIdx].name + " --> ");
+					/*System.out.print(deGraph[oneIdx].name + " --> ");
 					for(Neighbor pntr = deGraph[oneIdx].adjList; pntr != null; pntr = pntr.next) {
 						System.out.print(deGraph[pntr.vertexNum].name + "--> ");
 						//System.out.println();
 						//System.out.print("C2.4");
-					}
+					}*/
 					
 					
-					System.out.println();
+					//System.out.println();
 
 					
-					System.out.println(oneIdx + " " + twoIdx);
-					System.out.println(relationOne + " " + relationTwo);
+					//System.out.println(oneIdx + " " + twoIdx);
+					//System.out.println(relationOne + " " + relationTwo);
+					//System.out.println("-------------------------------");
 					
 					//break;
 					relationLine = wholeFile.readLine();
@@ -245,13 +258,15 @@ public class Friends{
 				/* ****************************************************** 
 				 * USE THIS SECTION TO TEST YOUR CODE
 				 ********************************************************/ 
-				
-				System.out.print(deGraph[Friends.nameintConv("nick", deGraph)].name + " --> ");
-				for(Neighbor pntr = deGraph[Friends.nameintConv("nick", deGraph)].adjList; pntr != null; pntr = pntr.next) {
+				/*for(int y = 0; y < deGraph.length; y++) {
+				System.out.print(deGraph[y].name + " --> ");
+				for(Neighbor pntr = deGraph[y].adjList; pntr != null; pntr = pntr.next) {
 					System.out.print(deGraph[pntr.vertexNum].name + "--> ");
 					//System.out.println();
 					//System.out.print("C2.4");
 				}
+				System.out.println();
+				}*/
 				
 				
 			} catch(NumberFormatException e) {
@@ -275,10 +290,6 @@ public class Friends{
 			
 		}
 		
-		//Scanner userInput2 = new Scanner(System.in);
-		
-		
-		
 		System.out.println("Enter 1 to find the shortest chain from a person");
 		System.out.println("Enter 2 to find the cliques at each school");
 		System.out.println("Enter 3 to find the connectors");
@@ -294,28 +305,20 @@ public class Friends{
 			switch(Integer.parseInt(decision)) {
 				case 1:
 					System.out.println("Enter person where you want to start search");
-					String name1 = userInput.next().toLowerCase();
+					String name1 = userInput.next();
 					System.out.println("Enter the person you want to find in the friend chain");
-					String name2 = userInput.next().toLowerCase();
-					shortPath(name1, name2, totFriendSize, deGraph);
-					System.out.println("Enter choice: ");
-					decision = userInput.next();
-					continue;
+					String name2 = userInput.next();
+					
+					shortPath(name1.toLowerCase(), name2.toLowerCase(), totFriendSize, deGraph);
+					break;
 				case 2:
 					System.out.println("Enter the school that you want the cliques for");
-					String school = userInput.next();
-					
-					// Fix this...
-					//System.out.print(userInput.hasNext());
-					/*if(userInput.hasNext()) {
-						school = school.concat(" " );
-					}*/
-					System.out.print(school);
+					String school = userInput.next().toLowerCase();
 					cliques(school.toLowerCase(), deGraph);
-					System.out.println("Enter choice: ");
-					decision = userInput.next();
-					continue;
+					break;
 				case 3:
+					connector(deGraph);
+					break;
 			}
 			
 			System.out.println("Enter 1 to find the shortest chain from a person");
@@ -323,29 +326,13 @@ public class Friends{
 			System.out.println("Enter 3 to find the connectors");
 			System.out.println("Enter 4 to quit");
 			
-			
 			System.out.print("Enter choice: ");
 			
 			decision = userInput.next();
 			
+			
+			
 		}
-		
-		
-		// User chooses a number 
-		//System.out.print("Enter choice: ");
-		
-		
-		//String cool = userInput.next();
-		
-		//System.out.print(cool);
-		
-		
-		//int numChose = sc.nextInt();
-		
-		/*System.out.println(nameintConv("sam", deGraph));
-		System.out.println(Friends.nameintConv("jane", deGraph));
-		System.out.println(Friends.nameintConv("nick", deGraph));*/
-		//Friends.
 		
 	}
 	
@@ -371,8 +358,21 @@ public class Friends{
 		int counter = 0; // keeps track of the amount of people already searched
 		int nameCheckCount = 1;
 		list = DFS(relation1, nameChecked, relation2, list, deGraph, totFriendSize, counter, nameCheckCount);
+		if (!relation2.equals(list.get(list.size() - 1))) {
+			System.out.println("No connection found");
+			return;
+		}
+		
 		for(int i=0;i<list.size();i++){
-			System.out.print(list.get(i) + "-->");
+			
+			if(i == list.size()-1) {
+				System.out.print(list.get(i));
+				break;
+			}
+			System.out.print(list.get(i) + "--");
+			
+
+			
 		}
 		System.out.println();
 	}
@@ -445,6 +445,116 @@ public class Friends{
 	
 	//Start code here
 	
+	public static void connector(FriendNode[] deGraph) {
+		
+		ArrayList<String> connectors = new ArrayList<String>(); 
+		ArrayList<String> possibleConnectors = new ArrayList<String>(); 
+		
+		if (deGraph.length == 0) {
+			System.out.print("Empty Graph");
+			return;
+		}
+		
+		for(int x = 0; x < deGraph.length; x++) {
+			
+			// If there is only one neighbor, the neighbor must be a connector and is added to connectors list
+			if(deGraph[x].length(deGraph[x].adjList) == 1) {
+				
+				// makes sure the name does not repeat 
+				if (!connectors.contains(deGraph[deGraph[x].adjList.vertexNum].name) ) {
+					//System.out.println("C1" + deGraph[deGraph[x].adjList.vertexNum].name);
+					connectors.add(deGraph[deGraph[x].adjList.vertexNum].name);
+						
+					}
+				
+				for(int y = 0; y < possibleConnectors.size(); y++) {
+					
+					if (!connectors.contains(possibleConnectors.get(y))) {
+						//System.out.println("C2" + possibleConnectors.get(y));
+						connectors.add(possibleConnectors.get(y));
+					}
+					
+					
+				}
+				
+			} else if(deGraph[x].length(deGraph[x].adjList) == 2) {
+				
+				// makes sure the name does not repeat 
+				if (!possibleConnectors.contains(deGraph[deGraph[x].adjList.vertexNum].name) ) {
+					// Adds possible connectors if there are two neighbors
+					//System.out.println("C3.1" + deGraph[deGraph[x].adjList.vertexNum].name);
+					possibleConnectors.add(deGraph[deGraph[x].adjList.vertexNum].name);
+				}
+				
+			} else if(deGraph[x].length(deGraph[x].adjList) == 3) {
+				
+				possibleConnectors.clear();
+				
+				for(Neighbor pnter = deGraph[x].adjList; pnter != null; pnter = pnter.next) {
+				
+				int neighborNeighLen = deGraph[x].length(deGraph[pnter.vertexNum].adjList);
+				
+				if (!connectors.contains(deGraph[x].name)) {
+				if(neighborNeighLen < 3) {
+					//System.out.print(deGraph[x].name + "..............");
+					//System.out.print("C4");
+					connectors.add(deGraph[x].name);
+					break;
+				}
+				}
+				}
+				
+				
+				
+				
+				
+			} else if(deGraph[x].length(deGraph[x].adjList) == 4) {
+				
+				possibleConnectors.clear();
+				
+				for(Neighbor pnter = deGraph[x].adjList; pnter != null; pnter = pnter.next) {
+					
+					int neighborNeighLen = deGraph[x].length(deGraph[pnter.vertexNum].adjList); // Length of person's neighbor's neighbor list
+					//System.out.print(deGraph[x].length(deGraph[pnter.vertexNum].adjList));
+					
+					if (!connectors.contains(deGraph[x].name)) {
+					if(neighborNeighLen < 3) {
+						//System.out.print(deGraph[x].name + "..............");
+						//System.out.print("C5");
+						connectors.add(deGraph[x].name);
+						break;
+					}
+					}
+					
+				}
+				
+			} else if(deGraph[x].length(deGraph[x].adjList) >= 5) {
+				
+				possibleConnectors.clear();
+				
+				if (!connectors.contains(deGraph[deGraph[x].adjList.vertexNum].name) ) {
+					//System.out.print("C6");
+					connectors.add(deGraph[deGraph[x].adjList.vertexNum].name);
+				}
+				
+			}
+			//System.out.println("Goes around");
+			
+		}
+		
+		for(int x = 0; x < connectors.size(); x++) {
+			
+			System.out.print(connectors.get(x) + ", ");
+			
+		}
+		
+		System.out.println();
+		
+
+		
+		
+	}
+	
 
 
 public static void cliques(String school, FriendNode[] deGraph) {
@@ -470,8 +580,8 @@ public static void cliques(String school, FriendNode[] deGraph) {
 	}
 	
 	
-	/*System.out.print(deGraph[Friends.nameintConv("sam", deGraph)].name + " --> ");
-	for(Neighbor pntr = deGraph[Friends.nameintConv("sam", deGraph)].adjList; pntr != null; pntr = pntr.next) {
+	/*System.out.print(deGraph[Friends.nameintConv("Ricardo", deGraph)].name + " --> ");
+	for(Neighbor pntr = deGraph[Friends.nameintConv("Ricardo", deGraph)].adjList; pntr != null; pntr = pntr.next) {
 		System.out.print(deGraph[pntr.vertexNum].name + "--> ");
 	}*/
 	
@@ -479,6 +589,7 @@ public static void cliques(String school, FriendNode[] deGraph) {
 	//for()
 
 	ArrayList<FriendNode> clique = new ArrayList<FriendNode>();
+	ArrayList<String> relationship = new ArrayList<String>();
 	clique.add(sameSkool.get(0));
 	sameSkool.set(0, new FriendNode(null, -1));
 	//sameSkool.remove(2);
@@ -492,7 +603,7 @@ public static void cliques(String school, FriendNode[] deGraph) {
 	System.out.println();
 	
 	boolean isEmpty = false;
-	
+	int cliqueCount = 1; 
 	
 	
 	while(isEmpty != true)	{
@@ -510,6 +621,7 @@ public static void cliques(String school, FriendNode[] deGraph) {
 				
 				if(pnter.vertexNum == clique.get(x).idxNum) {
 					clique.add(sameSkool.get(i));
+					relationship.add(clique.get(x).name+ "|" + sameSkool.get(i).name);
 					sameSkool.set(i, new FriendNode(null, -1));
 				}
 				
@@ -521,7 +633,7 @@ public static void cliques(String school, FriendNode[] deGraph) {
 	}
 	}
 	
-
+	System.out.println("Clique " + cliqueCount + ":");
 	
 	// Prints size of clique 
 	System.out.println(clique.size());
@@ -531,10 +643,15 @@ public static void cliques(String school, FriendNode[] deGraph) {
 		System.out.println(clique.get(x).name + "|y|" + clique.get(x).school);
 	}
 	
-	//Prints out schoolmates
-	for(int x = 0; x < sameSkool.size(); x++) {
-		System.out.print(sameSkool.get(x));
+	// Gets list of relationship
+	for(int x = 0; x < relationship.size(); x++) {
+		System.out.println(relationship.get(x));
 	}
+	
+	//Prints out schoolmates
+	/*for(int x = 0; x < sameSkool.size(); x++) {
+		System.out.print(sameSkool.get(x));
+	}*/
 	
 	for(int m = 0; m < sameSkool.size(); m++) {
 		
@@ -544,6 +661,7 @@ public static void cliques(String school, FriendNode[] deGraph) {
 			//System.out.print(sameSkool.get(m) + "hey");
 			
 			clique.clear();
+			relationship.clear();
 			clique.add(sameSkool.get(m));
 			sameSkool.set(m, new FriendNode(null, -1));
 			
@@ -556,6 +674,8 @@ public static void cliques(String school, FriendNode[] deGraph) {
 		}
 		
 	}
+		++cliqueCount;
+		
 		//System.out.println();
 		
 		/*for(int x = 0; x < sameSkool.size(); x++) {
@@ -568,7 +688,7 @@ public static void cliques(String school, FriendNode[] deGraph) {
 		
 	
 	
-	System.out.println();
+	//System.out.println();
 	
 	/*System.out.print(deGraph[Friends.nameintConv("jane", deGraph)].name + " --> ");
 	for(Neighbor pntr = deGraph[Friends.nameintConv("jane", deGraph)].adjList; pntr != null; pntr = pntr.next) {
@@ -597,6 +717,17 @@ class FriendNode{
 	public FriendNode(String name, int idxNum){
 		this.name = name;
 		this.idxNum = idxNum;
+	}
+	
+	public int length(Neighbor adjList) {
+		
+		int x = 0;
+		
+		for(Neighbor pnter = adjList; pnter != null; pnter = pnter.next) {
+			++x;
+		}
+		
+		return x;
 	}
 	
 	public String toString(){
